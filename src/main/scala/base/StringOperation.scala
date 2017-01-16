@@ -1,0 +1,6 @@
+
+package base
+
+object StringOperation {
+
+}
