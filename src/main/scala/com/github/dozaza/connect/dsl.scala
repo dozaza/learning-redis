@@ -1,4 +1,6 @@
-package redis
+package com.github.dozaza.connect
+
+import redis.RedisClient
 
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._

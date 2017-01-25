@@ -1,4 +1,8 @@
+package com.github.dozaza
+
+import com.github.dozaza.base.StringOperation
 import redis.RedisClient
+
 import scala.concurrent.Await
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -7,6 +11,12 @@ import scala.concurrent.ExecutionContext.Implicits.global
 object main {
 
   def main(args: Array[String]): Unit = {
+    StringOperation.get()
+    StringOperation.set()
+    StringOperation.delete()
+  }
+
+  private def testPing(): Unit = {
     implicit val akkaSystem = akka.actor.ActorSystem()
 
     val redis = RedisClient()
@@ -20,5 +30,4 @@ object main {
 
     akkaSystem.shutdown()
   }
-
 }
