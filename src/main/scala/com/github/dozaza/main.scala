@@ -1,6 +1,6 @@
 package com.github.dozaza
 
-import com.github.dozaza.base.StringOperation
+import com.github.dozaza.base.{ListOperation, StringOperation}
 import redis.RedisClient
 
 import scala.concurrent.Await
@@ -11,9 +11,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
 object main {
 
   def main(args: Array[String]): Unit = {
-    StringOperation.get()
-    StringOperation.set()
-    StringOperation.delete()
+    testPing()
+    testStringOperation()
+    testListOperation()
   }
 
   private def testPing(): Unit = {
@@ -29,5 +29,18 @@ object main {
     Await.result(futurePong, 5 seconds)
 
     akkaSystem.shutdown()
+  }
+
+  private def testStringOperation(): Unit = {
+    StringOperation.get()
+    StringOperation.set()
+    StringOperation.delete()
+  }
+
+  private def testListOperation(): Unit = {
+    ListOperation.rpush()
+    ListOperation.lrange()
+    ListOperation.lindex()
+    ListOperation.lpop()
   }
 }

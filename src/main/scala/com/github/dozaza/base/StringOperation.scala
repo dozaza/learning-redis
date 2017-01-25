@@ -26,8 +26,7 @@ object StringOperation extends TestModule {
     val resultOpt = connect[Option[String]] { client =>
       client.get[String](key)
     }
-    println(resultOpt)
-    equal(resultOpt, Some(value))
+    assertEqual(resultOpt, Some(value))
   }
 
   def delete(): Unit = {
@@ -37,8 +36,7 @@ object StringOperation extends TestModule {
       val resultOpt = connect[Option[String]] { client =>
         client.get[String](key)
       }
-      println(resultOpt)
-      equal(resultOpt, None)
+      assertEqual(resultOpt, None)
     }
   }
 
