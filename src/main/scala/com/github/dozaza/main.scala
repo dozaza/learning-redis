@@ -1,6 +1,6 @@
 package com.github.dozaza
 
-import com.github.dozaza.base.{HashOperation, ListOperation, SetOperation, StringOperation}
+import com.github.dozaza.base._
 import redis.RedisClient
 
 import scala.concurrent.Await
@@ -16,6 +16,7 @@ object main {
     testListOperation()
     testSetOperation()
     testHashOperation()
+    testZSetOperation()
   }
 
   private def testPing(): Unit = {
@@ -58,5 +59,12 @@ object main {
     HashOperation.hget()
     HashOperation.hgetall()
     HashOperation.hdel()
+  }
+
+  private def testZSetOperation(): Unit = {
+    ZSetOperation.zadd()
+    ZSetOperation.zrange()
+    ZSetOperation.zrangescore()
+    ZSetOperation.zrem()
   }
 }
