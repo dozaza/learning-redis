@@ -1,6 +1,6 @@
 package com.github.dozaza
 
-import com.github.dozaza.base.{ListOperation, StringOperation}
+import com.github.dozaza.base.{ListOperation, SetOperation, StringOperation}
 import redis.RedisClient
 
 import scala.concurrent.Await
@@ -42,5 +42,12 @@ object main {
     ListOperation.lrange()
     ListOperation.lindex()
     ListOperation.lpop()
+  }
+
+  private def testSetOperation(): Unit = {
+    SetOperation.sadd()
+    SetOperation.sismember()
+    SetOperation.smembers()
+    SetOperation.srem()1
   }
 }
