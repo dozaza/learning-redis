@@ -1,5 +1,5 @@
 
-package com.github.dozaza.base
+package com.github.dozaza.simple
 
 import com.github.dozaza.connect.dsl.connect
 import com.github.dozaza.test.TestModule
