@@ -12,7 +12,10 @@ object CommandTest {
   private def testStringCommand(): Unit = {
     StringCommand.incr()
     StringCommand.decr()
-    StringCommand.incrbyfloat()
+    StringCommand.incrByFloat()
+    StringCommand.append()
+    StringCommand.getRange()
+    StringCommand.setRange()
   }
 
 }

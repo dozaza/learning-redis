@@ -34,7 +34,7 @@ object StringCommand extends TestModule {
     assertEqual(value2, -10)
   }
 
-  def incrbyfloat(): Unit = {
+  def incrByFloat(): Unit = {
     val key = "test"
     val value = connect[Option[Double]]{ client =>
       client.del(key)
@@ -42,4 +42,51 @@ object StringCommand extends TestModule {
     }
     assertEqual(value, Some(2.2d))
   }
+
+  def append(): Unit = {
+    val key = "test"
+    val length = connect[Long]{ client =>
+      client.del(key)
+      client.set(key, "dozaza")
+      client.append(key, "_coder")
+    }
+    assertEqual(length, 12)
+  }
+
+  def getRange(): Unit = {
+    val key = "test"
+    val value = connect[Option[String]]{ client =>
+      client.del(key)
+      client.set(key, "dozaza_coder")
+      client.getrange[String](key, 7, 11)
+    }
+    assertEqual(value, Some("coder"))
+
+    val value2 = connect[Option[String]]{ client =>
+      client.del(key)
+      client.set(key, "dozaza_coder")
+      client.getrange[String](key, 12, 13)
+    }
+    assertEqual(value2, Some(""))
+  }
+
+  def setRange(): Unit = {
+    val key = "test"
+    val value = connect[Option[String]]{ client =>
+      client.del(key)
+      client.set(key, "dozaza_coder")
+      client.setrange(key, 7, "CODER")
+      client.get[String](key)
+    }
+    assertEqual(value, Some("dozaza_CODER"))
+
+    val value2 = connect[Option[String]]{ client =>
+      client.del(key)
+      client.set(key, "dozaza")
+      client.setrange(key, 6, "_coder")
+      client.get[String](key)
+    }
+    assertEqual(value2, Some("dozaza_coder"))
+  }
+
 }
