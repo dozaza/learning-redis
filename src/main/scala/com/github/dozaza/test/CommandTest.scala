@@ -1,13 +1,14 @@
 
 package com.github.dozaza.test
 
-import com.github.dozaza.command.{ListCommand, StringCommand}
+import com.github.dozaza.command.{ListCommand, SetCommand, StringCommand}
 
 object CommandTest {
 
   def test(): Unit = {
     testStringCommand()
     testListCommand()
+    testSetCommand()
   }
 
   private def testStringCommand(): Unit = {
@@ -26,5 +27,9 @@ object CommandTest {
     ListCommand.brpop()
     ListCommand.rpoplpush()
     ListCommand.brpoplpush()
+  }
+
+  private def testSetCommand(): Unit = {
+    SetCommand.sadd()
   }
 }

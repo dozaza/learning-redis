@@ -1,6 +1,6 @@
 package com.github.dozaza.simple
 
-import com.github.dozaza.connect.dsl._
+import com.github.dozaza.redis.dsl._
 import com.github.dozaza.test.TestModule
 
 object StringOperation extends TestModule {

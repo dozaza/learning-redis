@@ -1,4 +1,4 @@
-package com.github.dozaza.connect
+package com.github.dozaza.redis
 
 import redis.{RedisBlockingClient, RedisClient}
 

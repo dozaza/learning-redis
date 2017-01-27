@@ -1,7 +1,7 @@
 
 package com.github.dozaza.simple
 
-import com.github.dozaza.connect.dsl.connect
+import com.github.dozaza.redis.dsl.connect
 import com.github.dozaza.test.TestModule
 
 object SetOperation extends TestModule {

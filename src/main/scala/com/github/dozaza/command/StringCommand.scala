@@ -1,7 +1,7 @@
 
 package com.github.dozaza.command
 
-import com.github.dozaza.connect.dsl._
+import com.github.dozaza.redis.dsl._
 import com.github.dozaza.test.TestModule
 
 object StringCommand extends TestModule {
