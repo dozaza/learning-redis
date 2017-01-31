@@ -36,5 +36,11 @@ object CommandTest {
     SetCommand.smembers()
     SetCommand.spop()
     SetCommand.smove()
+    SetCommand.sdiff()
+    SetCommand.sdiffstore()
+    SetCommand.sinter()
+    SetCommand.sinterstore()
+    SetCommand.sunion()
+    SetCommand.sunionstore()
   }
 }

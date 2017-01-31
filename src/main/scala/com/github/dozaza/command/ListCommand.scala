@@ -9,6 +9,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 object ListCommand extends TestModule {
 
+  /**
+    * Return a part of list, include the start & end index
+    */
   def lrange(): Unit = {
     val key = "test-list"
     val list = connect{ client =>
@@ -21,6 +24,9 @@ object ListCommand extends TestModule {
     assertEqual(list.last, "element1")
   }
 
+  /**
+    * Only keey the part of list, include the start & end index
+    */
   def ltrim(): Unit = {
     val key = "test-list"
     val list = connect{ client =>
@@ -34,6 +40,9 @@ object ListCommand extends TestModule {
     assertEqual(list.last, "element3")
   }
 
+  /**
+    * Left blocking pop an element, wait a certain time or will return [[None]]
+    */
   def blpop(): Unit = {
     val key = "test-list"
     connect{ client =>
@@ -52,6 +61,9 @@ object ListCommand extends TestModule {
     assertEqual(list.head, "element2")
   }
 
+  /**
+    * Right blocking pop an element, wait a certain time or will return [[None]]
+    */
   def brpop(): Unit = {
     val key = "test-list"
     connect{ client =>
@@ -70,6 +82,9 @@ object ListCommand extends TestModule {
     assertEqual(list.head, "element1")
   }
 
+  /**
+    * Right pop and left push into another list
+    */
   def rpoplpush(): Unit = {
     val key = "test-list"
     val key2 = "test-list2"
@@ -92,6 +107,9 @@ object ListCommand extends TestModule {
     assertEqual(list2.head, "element3")
   }
 
+  /**
+    * Right pop and left push into another list in blocking operation
+    */
   def brpoplpush(): Unit = {
     val key = "test-list"
     val key2 = "test-list2"

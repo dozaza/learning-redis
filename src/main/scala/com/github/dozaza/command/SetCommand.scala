@@ -49,6 +49,9 @@ object SetCommand extends TestModule {
     assertEqual(flag2, false)
   }
 
+  /**
+    * Return the number of elements in a set
+    */
   def scard(): Unit = {
     val key = "set-key"
     val number = connect { client =>
@@ -72,6 +75,9 @@ object SetCommand extends TestModule {
     assertEqual(members.contains("element2"), true)
   }
 
+  /**
+    * Pop an element randomly
+    */
   def spop(): Unit = {
     val key = "set-key"
     val (p1, p2) = connect { client =>
@@ -107,5 +113,137 @@ object SetCommand extends TestModule {
 
     assertEqual(flag, true)
     assertEqual(flag2, false)
+  }
+
+  /**
+    * Return elements exists in first key, not in the rest
+    */
+  def sdiff(): Unit = {
+    val key = "set-key"
+    val key2 = "set-key2"
+    val key3 = "set-key3"
+    val diff = connect { client =>
+      client.del(key)
+      client.del(key2)
+      client.del(key3)
+
+      client.sadd(key, "element1", "element2", "element3", "element4", "element5", "element6")
+      client.sadd(key2, "element2", "element4")
+      client.sadd(key3, "element1", "element5")
+
+      client.sdiff[String](key, key2, key3)
+    }
+
+    assertEqual(diff.size, 2)
+    assertEqual(diff.contains("element3"), true)
+    assertEqual(diff.contains("element6"), true)
+  }
+
+  /**
+    * Store elements exists in first key, not in the rest into a another set
+    */
+  def sdiffstore(): Unit = {
+    val key = "set-key"
+    val key2 = "set-key2"
+    val key3 = "set-key3"
+    val dest = "dest-set-key"
+    val diff = connect { client =>
+      client.del(key)
+      client.del(key2)
+      client.del(key3)
+      client.del(dest)
+
+      client.sadd(key, "element1", "element2", "element3", "element4", "element5", "element6")
+      client.sadd(key2, "element2", "element4")
+      client.sadd(key3, "element1", "element5")
+
+      client.sdiffstore(dest, key, key2, key3)
+      client.smembers[String](dest)
+    }
+
+    assertEqual(diff.size, 2)
+    assertEqual(diff.contains("element3"), true)
+    assertEqual(diff.contains("element6"), true)
+  }
+
+  /**
+    * Return elements exists in every set in the same time
+    */
+  def sinter(): Unit = {
+    val key = "set-key"
+    val key2 = "set-key2"
+    val inter = connect { client =>
+      client.del(key)
+      client.del(key2)
+
+      client.sadd(key, "element1", "element2", "element3", "element4", "element5", "element6")
+      client.sadd(key2, "element2", "element4")
+
+      client.sinter[String](key, key2)
+    }
+
+    assertEqual(inter.size, 2)
+    assertEqual(inter.contains("element2"), true)
+    assertEqual(inter.contains("element4"), true)
+  }
+
+  /**
+    * Store elements exists in every set in the same time into a another set
+    */
+  def sinterstore(): Unit = {
+    val key = "set-key"
+    val key2 = "set-key2"
+    val dest = "dest-set-key"
+    val inter = connect { client =>
+      client.del(key)
+      client.del(key2)
+      client.del(dest)
+
+      client.sadd(key, "element1", "element2", "element3", "element4", "element5", "element6")
+      client.sadd(key2, "element2", "element4")
+
+      client.sinterstore(dest, key, key2)
+      client.smembers[String](dest)
+    }
+
+    assertEqual(inter.size, 2)
+    assertEqual(inter.contains("element2"), true)
+    assertEqual(inter.contains("element4"), true)
+  }
+
+  def sunion(): Unit = {
+    val key = "set-key"
+    val key2 = "set-key2"
+
+    val unioned = connect { client =>
+      client.del(key)
+      client.del(key2)
+
+      client.sadd(key, "element1", "element2", "element3")
+      client.sadd(key2, "element2", "element4")
+
+      client.sunion[String](key, key2)
+    }
+
+    assertEqual(unioned.size, 4)
+  }
+
+  def sunionstore(): Unit = {
+    val key = "set-key"
+    val key2 = "set-key2"
+    val dest = "dest-set-key"
+
+    val unioned = connect { client =>
+      client.del(key)
+      client.del(key2)
+
+      client.sadd(key, "element1", "element2", "element3")
+      client.sadd(key2, "element2", "element4")
+
+      client.sunionstore(dest, key, key2)
+      client.smembers[String](dest)
+    }
+
+    assertEqual(unioned.size, 4)
   }
 }
