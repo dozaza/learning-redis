@@ -31,5 +31,10 @@ object CommandTest {
 
   private def testSetCommand(): Unit = {
     SetCommand.sadd()
+    SetCommand.sismember()
+    SetCommand.scard()
+    SetCommand.smembers()
+    SetCommand.spop()
+    SetCommand.smove()
   }
 }
