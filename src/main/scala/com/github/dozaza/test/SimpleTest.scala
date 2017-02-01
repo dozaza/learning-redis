@@ -12,7 +12,7 @@ object SimpleTest extends Logging {
     testSetOperation()
     testHashOperation()
     testZSetOperation()
-    log.info("Simple test finished")
+    logger.info("Simple test finished")
   }
 
   private def testStringOperation(): Unit = {

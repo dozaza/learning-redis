@@ -12,7 +12,7 @@ object CommandTest extends Logging {
     testSetCommand()
     testHashCommand()
     testZSetCommand()
-    log.info("Command test finished")
+    logger.info("Command test finished")
 
   }
 

@@ -13,7 +13,7 @@ object PingTest extends TestModule with Logging {
 
   def test(): Unit = {
     testPing()
-    log.info("Ping test finished")
+    logger.info("Ping test finished")
   }
 
   private def testPing(): Unit = {

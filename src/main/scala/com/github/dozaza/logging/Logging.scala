@@ -4,6 +4,6 @@ package com.github.dozaza.logging
 
 trait Logging {
 
-  protected lazy val log = new Logger(this.getClass)
+  protected lazy val logger = new Logger(this.getClass)
 
 }

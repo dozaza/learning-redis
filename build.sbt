@@ -2,6 +2,13 @@ name := "redis-com.github.dozaza.test"
 
 version := "0.0.x"
 
+scalacOptions ++= {
+  Seq(
+    "-feature",
+    "-language:postfixOps"
+  )
+}
+
 libraryDependencies ++= {
   Seq(
     "com.github.etaty" %% "rediscala" % "1.7.0",
