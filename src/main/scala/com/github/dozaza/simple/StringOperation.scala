@@ -1,9 +1,10 @@
 package com.github.dozaza.simple
 
+import com.github.dozaza.logging.Logging
 import com.github.dozaza.redis.dsl._
 import com.github.dozaza.test.TestModule
 
-object StringOperation extends TestModule {
+object StringOperation extends TestModule with Logging {
 
   def get(): Unit = {
     val key = "name"
@@ -11,7 +12,7 @@ object StringOperation extends TestModule {
       client.get[String](key)
     }
 
-    println(resultOpt)
+    assertEqual(resultOpt, None)
   }
 
   def set(): Unit = {

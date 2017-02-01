@@ -1,9 +1,10 @@
 
 package com.github.dozaza.test
 
+import com.github.dozaza.logging.Logging
 import com.github.dozaza.simple._
 
-object SimpleTest {
+object SimpleTest extends Logging {
 
   def test(): Unit = {
     testStringOperation()
@@ -11,6 +12,7 @@ object SimpleTest {
     testSetOperation()
     testHashOperation()
     testZSetOperation()
+    log.info("Simple test finished")
   }
 
   private def testStringOperation(): Unit = {

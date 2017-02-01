@@ -2,8 +2,9 @@
 package com.github.dozaza.test
 
 import com.github.dozaza.command._
+import com.github.dozaza.logging.Logging
 
-object CommandTest {
+object CommandTest extends Logging {
 
   def test(): Unit = {
     testStringCommand()
@@ -11,6 +12,8 @@ object CommandTest {
     testSetCommand()
     testHashCommand()
     testZSetCommand()
+    log.info("Command test finished")
+
   }
 
   private def testStringCommand(): Unit = {
