@@ -1,7 +1,7 @@
 
 package com.github.dozaza.test
 
-import com.github.dozaza.command.{HashCommand, ListCommand, SetCommand, StringCommand}
+import com.github.dozaza.command._
 
 object CommandTest {
 
@@ -10,6 +10,7 @@ object CommandTest {
     testListCommand()
     testSetCommand()
     testHashCommand()
+    testZSetCommand()
   }
 
   private def testStringCommand(): Unit = {
@@ -54,5 +55,24 @@ object CommandTest {
     HashCommand.hgetall()
     HashCommand.hincrby()
     HashCommand.hincrbyfloat()
+  }
+
+  private def testZSetCommand(): Unit = {
+    ZSetCommand.zadd()
+    ZSetCommand.zrem()
+    ZSetCommand.zcard()
+    ZSetCommand.zincrby()
+    ZSetCommand.zcount()
+    ZSetCommand.zrank()
+    ZSetCommand.zscore()
+    ZSetCommand.zrange()
+    ZSetCommand.zrevrank()
+    ZSetCommand.zrevrange()
+    ZSetCommand.zrangebyscore()
+    ZSetCommand.zrevrangebyscore()
+    ZSetCommand.zremrangebyrank()
+    ZSetCommand.zremrangebyscore()
+    ZSetCommand.zinterstore()
+    ZSetCommand.zunionstore()
   }
 }
