@@ -3,6 +3,7 @@ package com.github.dozaza.redis
 import com.typesafe.config.ConfigFactory
 import akka.actor.ActorSystem
 import com.github.dozaza.config.TypesafeConfig
+import redis.commands.TransactionBuilder
 import redis.{RedisBlockingClient, RedisClient}
 
 import scala.concurrent.{Await, Future}
@@ -27,5 +28,34 @@ package object dsl {
   }
 
   def client = RedisClient()
+
+  def transaction[T](op: TransactionBuilder => T): T = {
+    val redis = RedisClient()
+    val tx = redis.transaction()
+    try {
+      val result = op(tx)
+      tx.exec()
+      result
+    } catch {
+      case e: Exception =>
+        tx.discard()
+        throw e
+    }
+  }
+
+  def transactionWithWatch[T](watchedKeys: String*)(op: TransactionBuilder => T): T = {
+    val redis = RedisClient()
+    val tx = redis.transaction()
+    try {
+      tx.watch(watchedKeys:_*)
+      val result = op(tx)
+      tx.exec()
+      result
+    } catch {
+      case e: Exception =>
+        tx.discard()
+        throw e
+    }
+  }
 
 }
