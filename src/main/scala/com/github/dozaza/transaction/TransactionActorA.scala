@@ -6,22 +6,24 @@ import com.github.dozaza.redis.dsl._
 import com.github.dozaza.logging.Logging
 import com.github.dozaza.test.TestModule
 
-import scala.concurrent.duration._
-import scala.concurrent.ExecutionContext.Implicits.global
 
+/**
+  * Maybe try to make some tests for transaction execution failure
+  */
 class TransactionActorA  extends Actor with Logging with TestModule {
 
   override def receive: Receive = {
     case msg: String if msg == "start" =>
-      val value = transaction { tx =>
+      transactionWithWatch("test-tx") { tx =>
         tx.del("test-tx")
         tx.set("test-tx", "hello tx")
-        akkaSystem.scheduler.scheduleOnce(5 seconds, self, "wait")
-        tx.get("test-tx")
+        tx.get[String]("test-tx")
+      } match {
+        case Some(value) => assertEqual(value, Some("hello tx"))
+        case _ => logger.error("Unable to execute transaction")
       }
-      assertEqual(value, "hello tx")
-    case msg: String if msg == "wait" => // Do nothing
-    case _@x => logger.error("Unknow message: " + x)
+
+    case _@x => logger.error("Unknown message: " + x)
   }
 
 }
