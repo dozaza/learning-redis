@@ -1,7 +1,7 @@
 package com.github.dozaza
 
 import com.github.dozaza.pubsub.Pubsub
-import com.github.dozaza.test.{CommandTest, PingTest, SimpleTest}
+import com.github.dozaza.test.{CommandTest, PingTest, SimpleTest, TransactionTest}
 import com.github.dozaza.redis.dsl._
 
 import scala.concurrent.duration._
@@ -14,6 +14,7 @@ object main {
     SimpleTest.test()
     CommandTest.test()
     Pubsub.start()
+    TransactionTest.start()
 
     akkaSystem.scheduler.scheduleOnce(10 seconds)(akkaSystem.shutdown())
   }
