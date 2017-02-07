@@ -20,6 +20,7 @@ class TransactionActorA  extends Actor with Logging with TestModule {
         tx.get[String]("test-tx")
       }
       assertEqual(exceptionOpt.isDefined, true)
+      logger.info(exceptionOpt.get.getMessage)
     case _@x => logger.error("Unknown message: " + x)
   }
 

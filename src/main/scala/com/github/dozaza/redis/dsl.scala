@@ -1,6 +1,5 @@
 package com.github.dozaza.redis
 
-import com.typesafe.config.ConfigFactory
 import akka.actor.ActorSystem
 import com.github.dozaza.config.TypesafeConfig
 import redis.commands.TransactionBuilder
@@ -8,6 +7,7 @@ import redis.{RedisBlockingClient, RedisClient}
 
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
+import scala.util.control.NonFatal
 
 package object dsl {
 
@@ -30,12 +30,12 @@ package object dsl {
   def client = RedisClient()
 
   /**
-    * Send all operations to server only when exec is called, transaction discard will be done automatically when failure
+    * Send all operations to server only when exec is called
     * @param op
     * @tparam T
     * @return
     */
-  def transaction[T](op: TransactionBuilder => Future[T], throwFailure: Boolean = false): Option[Exception] = {
+  def transaction[T](op: TransactionBuilder => Future[T]): Option[Throwable] = {
     val redis = RedisClient()
     val tx = redis.transaction()
     try {
@@ -44,28 +44,41 @@ package object dsl {
       Await.result(future, 1 hours)
       None
     } catch {
-      case e: Exception => Some(e)
+      case NonFatal(e) =>
+        tryDiscard(tx)
+        Some(e)
     }
   }
 
   /**
-    * Send all operations to server only when exec is called, transaction discard will be done automatically when failure
+    * Send all operations to server only when exec is called
     * @param watchedKeys
     * @param op
     * @tparam T
     * @return
     */
-  def transactionWithWatch[T](watchedKeys: String*)(op: TransactionBuilder => Future[T], throwFail: Boolean = false): Option[Exception] = {
+  def transactionWithWatch[T](watchedKeys: String*)(op: TransactionBuilder => Future[T]): Option[Throwable] = {
+    val redis = RedisClient()
+    val tx = redis.transaction()
     try {
-      val redis = RedisClient()
-      val tx = redis.transaction()
       tx.watch(watchedKeys:_*)
       val future = op(tx)
       tx.exec()
       Await.result(future, 1 hours)
       None
     } catch {
-      case e: Exception => Some(e)
+      case NonFatal(e) =>
+        tryDiscard(tx)
+        Some(e)
+    }
+  }
+
+  private def tryDiscard(transactionBuilder: TransactionBuilder): Unit = {
+    try {
+      transactionBuilder.discard()
+    } catch {
+      case _: IllegalStateException => // Do nothing cause already closed
+      case x: Throwable => throw x
     }
   }
 
