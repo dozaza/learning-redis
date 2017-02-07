@@ -30,52 +30,42 @@ package object dsl {
   def client = RedisClient()
 
   /**
-    * Send all operations to server only when exec is called
+    * Send all operations to server only when exec is called, transaction discard will be done automatically when failure
     * @param op
     * @tparam T
     * @return
     */
-  def transaction[T](op: TransactionBuilder => Future[T], throwFailure: Boolean = false): Option[T] = {
+  def transaction[T](op: TransactionBuilder => Future[T], throwFailure: Boolean = false): Option[Exception] = {
     val redis = RedisClient()
     val tx = redis.transaction()
     try {
       val future = op(tx)
       tx.exec()
-      val result = Await.result(future, 1 hours)
-      Option(result)
+      Await.result(future, 1 hours)
+      None
     } catch {
-      case e: Exception =>
-        tx.discard()
-        if (throwFailure) {
-          throw e
-        }
-        None
+      case e: Exception => Some(e)
     }
   }
 
   /**
-    * Send all operations to server only when exec is called
+    * Send all operations to server only when exec is called, transaction discard will be done automatically when failure
     * @param watchedKeys
     * @param op
     * @tparam T
     * @return
     */
-  def transactionWithWatch[T](watchedKeys: String*)(op: TransactionBuilder => Future[T], throwFail: Boolean = false): Option[T] = {
-    val redis = RedisClient()
-    val tx = redis.transaction()
+  def transactionWithWatch[T](watchedKeys: String*)(op: TransactionBuilder => Future[T], throwFail: Boolean = false): Option[Exception] = {
     try {
+      val redis = RedisClient()
+      val tx = redis.transaction()
       tx.watch(watchedKeys:_*)
       val future = op(tx)
       tx.exec()
-      val result = Await.result(future, 1 hours)
-      Option(result)
+      Await.result(future, 1 hours)
+      None
     } catch {
-      case e: Exception =>
-        tx.discard()
-        if (throwFail) {
-          throw e
-        }
-        None
+      case e: Exception => Some(e)
     }
   }
 
