@@ -9,7 +9,7 @@ import redis.api.pubsub.{Message, PMessage}
 
 
 class SubscriberActor(channels: Seq[String] = Nil, patterns: Seq[String] = Nil)
-  extends RedisSubscriberActor(new InetSocketAddress("localhost", 6379), channels, patterns, onConnectStatus = connected => { println(s"connected: $connected")}) with Logging {
+  extends RedisSubscriberActor(new InetSocketAddress("localhost", 6379), channels, patterns, onConnectStatus = {connect => {}}) with Logging {
 
   override def onMessage(m: Message): Unit = {
     logger.info("message received: " + m.data.decodeString("utf-8"))

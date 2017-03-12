@@ -12,7 +12,7 @@ object TransactionTest {
     val actorB = akkaSystem.actorOf(Props(classOf[TransactionActorB]), "ActorB")
 
     actorA ! "start"
-    Thread.sleep(500)
+    Thread.sleep(200)
     actorB ! "start"
   }
 
