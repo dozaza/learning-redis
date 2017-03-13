@@ -13,6 +13,12 @@ package object dsl {
 
   implicit val akkaSystem = ActorSystem("redis-actor-system", TypesafeConfig.config)
 
+  /**
+    * Use redis pipeline, non-atomically
+    * @param op
+    * @tparam T
+    * @return
+    */
   def connect[T](op: RedisClient => Future[T]): T = {
     val redis = RedisClient()
     val future = op(redis)

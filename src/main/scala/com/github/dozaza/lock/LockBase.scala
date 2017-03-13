@@ -9,7 +9,9 @@ trait LockBase {
 
     (0 until 10).foreach { _ =>
       val lockedUuidOpt = connect { client => client.get[String](lockName) }
-      if (lockedUuidOpt.isDefined && lockedUuidOpt.get == uuid) {
+      if (lockedUuidOpt.isEmpty || lockedUuidOpt.get != uuid) {
+        return
+      } else {
         val exceptionOpt = transactionWithWatch(lockName) { client => client.del(lockName) }
         if (exceptionOpt.isEmpty) {
           return

@@ -3,7 +3,7 @@ package com.github.dozaza.lock
 import java.util.UUID
 import com.github.dozaza.redis.dsl._
 
-object Lock {
+object Lock extends LockBase {
 
   def acquireLock(name: String, lockTimeout: Int = 10 * 1000, acquireTimeout: Int = 10 * 1000): Option[String] = {
     val uuid = UUID.randomUUID().toString

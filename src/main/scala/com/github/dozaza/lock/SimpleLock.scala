@@ -4,7 +4,7 @@ import java.util.UUID
 import com.github.dozaza.redis.dsl._
 import scala.concurrent.ExecutionContext.Implicits.global
 
-object SimpleLock {
+object SimpleLock extends LockBase {
 
   /**
     * acquire a lock with a timeout on milliseconds, if succeeded, return Some(UUID), else return None
