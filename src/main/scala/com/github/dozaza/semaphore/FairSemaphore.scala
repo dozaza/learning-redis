@@ -5,7 +5,7 @@ import java.util.UUID
 import com.github.dozaza.redis.dsl._
 import redis.api.Limit
 
-object FairSemaphore {
+object FairSemaphore extends SemaphoreBase {
 
   /**
     * Try to acquire semphore is "fair" way by adding an auto-increment counter.
@@ -51,6 +51,22 @@ object FairSemaphore {
           client.zrem(czset, uuid)
         }
         None
+    }
+  }
+
+  /**
+    * Release fair semaphore.
+    * Although there is a "zinterstoreWeighted" before we add a new semaphore, it's better to release it in this method,
+    * cause in concurrency, there will be some failures when acquiring semaphore.
+    * @param name
+    * @param uuid
+    */
+  def releaseFairSemaphore(name: String, uuid: String): Unit = {
+    val semaName = "semaphore:" + name
+    val czset = semaName + ":owner"
+    connect { client =>
+      client.zrem(semaName, uuid)
+      client.zrem(czset, uuid)
     }
   }
 
