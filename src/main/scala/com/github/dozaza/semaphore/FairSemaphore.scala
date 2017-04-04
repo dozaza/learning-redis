@@ -70,4 +70,21 @@ object FairSemaphore extends SemaphoreBase {
     }
   }
 
+  def refreshFairSemaphore(name: String, uuid: String): Boolean = {
+    val semaName = "semaphore:" + name
+    val now = System.currentTimeMillis()
+    // Refresh semaphore's expire time
+    val result = connect[Long] { client =>
+      client.zadd(semaName, (now, uuid))
+    }
+
+    // Means this is a new element added, semaphore has already been expired
+    if (result > 0) {
+      releaseFairSemaphore(name, uuid)
+      false
+    } else {
+      true
+    }
+  }
+
 }
