@@ -18,7 +18,7 @@ object UnfairSemaphore {
     * @return
     */
   def acquireSemaphore(name: String, limit: Int, timeout: Int = 10 * 1000): Option[String] = {
-    val semaName = "semaphore:" + name
+    val semaName = "unfair-semaphore:" + name
     val uuid = UUID.randomUUID().toString
     val now = System.currentTimeMillis()
 
