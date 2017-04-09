@@ -5,12 +5,15 @@ import com.github.dozaza.redis.dsl._
 
 object Lock extends LockBase {
 
-  def acquireLock(name: String, lockTimeout: Int = 10 * 1000, acquireTimeout: Int = 10 * 1000): Option[String] = {
+  def acquireLock(name: String, lockTimeout: Int = 10 * 1000, acquireTimeout: Double = 10 * 1000): Option[String] = {
     val uuid = UUID.randomUUID().toString
     val end = System.currentTimeMillis() + acquireTimeout
     val lockName = "lock:" + name
     while(System.currentTimeMillis() < end) {
-      val flag = connect { client => client.set(lockName, uuid, NX = true)}
+      val flag = connect { client =>
+        // set key only key not exists
+        client.set(lockName, uuid, NX = true)
+      }
       if (flag) {
         // Update expire time
         connect{ client => client.expire(lockName, lockTimeout) }

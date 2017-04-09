@@ -3,6 +3,7 @@ package com.github.dozaza.semaphore
 import java.util.UUID
 
 import com.github.dozaza.redis.dsl._
+import com.github.dozaza.lock.Lock
 import redis.api.Limit
 
 object FairSemaphore extends SemaphoreBase {
@@ -50,6 +51,27 @@ object FairSemaphore extends SemaphoreBase {
           client.zrem(semaName, uuid)
           client.zrem(czset, uuid)
         }
+        None
+    }
+  }
+
+  /**
+    * Add a lock when acquiring semaphore in order to reduce errors in concurrency
+    * @param name
+    * @param limit
+    * @param timeout
+    * @return
+    */
+  def acquireSemaphoreWithLock(name: String, limit: Int, timeout: Int = 10 * 1000): Option[String] = {
+    val lockOpt = Lock.acquireLock(name, acquireTimeout = 0.01)
+    lockOpt match {
+      case Some(lock) =>
+        try {
+          acquireSemaphore(name, limit, timeout)
+        } finally {
+          Lock.release(name, lock)
+        }
+      case _ =>
         None
     }
   }
